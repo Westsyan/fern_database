@@ -1,0 +1,271 @@
+@()(implicit session: Session)
+@admin.main("") {
+
+    <div class="row">
+        <div class="form-group col-sm-12">
+            <h2 class="page-heading"
+            style="text-align: left;
+                border-bottom: 5px solid #e9f3f4;
+                letter-spacing: 0px"><font style="font-size: 30px">Upload Sample</font></h2>
+        </div>
+    </div>
+
+    <form class="registration-form form-horizontal" id="UploadForm"
+    style="margin: 20px;">
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Sample:</label>
+            <div class="col-sm-4">
+                <input class="form-control" name="sample" id="sample">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Chloroplast file:</label>
+            <div class="col-sm-4">
+                <input id="input-1" type="file" class="file control-label" name="file" data-show-preview="false"
+                data-show-upload="false" accept=".gb">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="actions col-sm-offset-2 col-sm-3">
+                <button type="button" class="btn btn-primary" style="width: 80%;
+                    margin-top: 5px" id="search" onclick="Upload()">
+                    Upload</button>
+            </div>
+        </div>
+
+    </form>
+
+    <hr>
+    <div id="toolbar">
+    </div>
+    <div class="table-responsive panel-collapse collapse in " >
+        <table class="display table table-bordered" id="table" data-pagination="true" data-search="true"
+        data-toolbar="#toolbar" data-page-list="[10, 25, 50, 100]" data-search-align="left" data-multiple-search="true"
+        style="word-wrap: break-word">
+            <thead>
+                <tr>
+                    <th data-field="samples" data-sortable="true" id="samples" title="Sample">Sample</th>
+                    <th data-field="download" data-sortable="true" id="download" title="">Download</th>
+                    <th data-field="operation" data-sortable="true" id="operation" title="Operation">Operation</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div id="update" class="modal fade modal-margin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 600px;">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">
+                        <span id="lblAddTitle" style="font-weight: bold">修改样品名：</span>
+                    </h4>
+                </div>
+                <form id="updateForm" data-toggle="validator">
+                    <div class="modal-body">
+                        <div class="row-fluid">
+
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            Sample：
+                                        </label>
+                                        <input class="form-control indent" id="oldsample" name="oldsample" readonly="readonly" >
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-8" style="display: none;" >
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            ID：
+                                        </label>
+                                        <input class="form-control indent" id="sampleid" name="sampleid" readonly="readonly" >
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            NewSample: </label>
+                                        <input class="form-control indent" name="newsample" id="newsample" >
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-info">
+                        <button type="submit" class="btn blue" onclick="sureUpdate()">确定</button>
+                        <button type="button" class="btn green" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteShow" class="modal fade modal-margin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: 200px;">
+        <div class="modal-dialog" style="width: 400px;">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h4 class="modal-title" align="center" id="title1">
+                        <span id="deleteTitle" style="font-weight: bold">删除样品
+                            <b id="dtitle">
+
+                            </b>
+                        </span>
+                    </h4>
+                    <h4 class="modal-title" align="center" id="title2" style="display: none">
+                        <span id="deleteTitle" style="font-weight: bold">删除中...</span>
+                    </h4>
+                    <h4 class="modal-title" align="center" id="title3" style="display: none">
+                        <span id="deleteTitle" style="font-weight: bold">删除成功</span>
+                    </h4>
+                </div>
+                <div class="row-fluid" align="center" >
+                    <div id="warn1">
+                        <img src="/assets/images/warning.png">
+                    </div>
+                    <div id="warn2" style="display: none;">
+                        <img src="/assets/images/timg2.gif" style="height: 109px;">
+                    </div>
+                    <div id="warn3" style="display: none;">
+                        <img src="/assets/images/success.png">
+                    </div>
+                </div>
+                <div class="modal-footer bg-info">
+                    <div align="center">
+                        <button type="button" class="btn red" onclick="deleteSample(this)" style="width: 100px;" id="btn1">
+                            确定</button>
+                        <button type="button" class="btn green" data-dismiss="modal" style="width: 100px;" id="btn2">
+                            取消</button>
+                        <button type="button" class="btn green" onclick="updateDelete()" style="width: 100px;
+                            display: none;" id="btn3">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+            $(function () {
+                updateTable();
+                formValidation();
+            });
+
+            function formValidation() {
+                $('#UploadForm').formValidation({
+                    framework: 'bootstrap',
+                    icon: {
+                        valid: 'glyphicon glyphicon-ok',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        sample: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                },
+                                remote: {
+                                    type: 'POST',
+                                    url: '/fern/back/chloroplast/checkSample',
+                                    message: "The Sample is existed!",
+                                    delay: 1000
+                                }
+                            }
+                        },
+                        file: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please choose news file！'
+                                },
+                                file: {
+                                    extension: 'gb',
+                                    message: 'News file must is a gb file！'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateTable() {
+                $.ajax({
+                    url: "@routes.ChloroplastController.getAllSample()",
+                    type: "get",
+                    dataType: "json",
+                    success: function (data) {
+                        $('#table').bootstrapTable({data: data});
+                    }
+                });
+            }
+
+            function updateTitle(obj) {
+                var name = obj.value;
+                var id = obj.id;
+                $("#oldsample").empty();
+                $("#oldsample").val(name);
+                $("#sampleid").val(id);
+                $("#update").modal("show")
+            }
+
+
+            function reloadTable() {
+                $.ajax({
+                    url: "@routes.ChloroplastController.getAllSample()",
+                    type: "get",
+                    dataType: "json",
+                    success: function (data) {
+                        $('#table').bootstrapTable('load', data);
+                    }
+                });
+            }
+
+            function Upload() {
+                var index = layer.load(1);
+                var form = new FormData($("#UploadForm")[0]);
+                $.ajax({
+                    url: "@routes.ChloroplastController.uploadSample()",
+                    type: "post",
+                    dataType: "json",
+                    processData: false,
+                    contentType: false,
+                    data: form,
+                    success: function (data) {
+                        layer.close(index);
+                        cpm("更新成功");
+
+                    }
+
+                })
+            }
+
+            function updateDelete() {
+                $("#deleteShow").modal("hide");
+                reloadTable();
+            }
+
+
+            function deleteSample(obj) {
+                var id = obj.value;
+                deleting();
+                $.ajax({
+                    url: "/fern/back/chloroplast/deleteById?id=" + id,
+                    type: "delete",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.valid == "true") {
+                            deleteAfter();
+                        }
+                    }
+                });
+            }
+
+    </script>
+
+}

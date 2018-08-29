@@ -1,0 +1,249 @@
+@home.main("聚类树分析（表型）") {
+  <link rel="stylesheet" media="screen" href="@routes.Assets.at("phylotree.js-master/phylotree.css")">
+@*  <script src="@routes.Assets.at("javascripts/d3.min.js")" type="text/javascript"></script>*@
+  <script src="@routes.Assets.at("d3/d3.js")" type="text/javascript"></script>
+  <script src="@routes.Assets.at("phylotree.js-master/phylotree.js")" type="text/javascript"></script>
+  <script src="@routes.Assets.at("javascripts/underscore.min.js")" type="text/javascript"></script>
+  <style>
+
+          .fa-rotate-135 {
+            -webkit-transform: rotate(135deg);
+            -moz-transform: rotate(135deg);
+            -ms-transform: rotate(135deg);
+            -o-transform: rotate(135deg);
+            transform: rotate(135deg);
+          }
+
+          .fa-rotate-45 {
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            transform: rotate(45deg);
+          }
+
+          .myGroup {
+            margin-top: 15px;
+            margin-left: 15px;
+          }
+
+
+  </style>
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <h2 class="page-heading"
+      style="text-align: left;
+        border-bottom: 5px solid #e9f3f4">Fern Tree Of Life</h2>
+    </div>
+  </div>
+
+  <div id="content">
+    <div id="charts" class="well">没有图片结果生成！</div>
+    <div id="treeContent" >
+      <h5 style="display: none">图片结果:
+        <form action="@routes.TreeController.downloadTree()" method="post" onsubmit="mySubmit()" style="display: inline">
+          <input type="hidden" name="svgHtml" id="svgHtml">
+            &nbsp;<button class="btn btn-primary" type="submit"><i class="fa fa-download"></i>&nbsp;下载SVG文件</button>
+        </form>
+      </h5>
+
+      <div>
+        <div style="margin-bottom: 20px;">
+          <div class="btn-group myGroup">
+            <button type="button" class="btn btn-default btn-sm" data-direction="vertical" data-amount="1" title="Expand vertical spacing">
+              <i class="fa fa-arrows-v"></i>
+            </button>
+            <button type="button" class="btn btn-default btn-sm" data-direction="vertical" data-amount="-1" title="Compress vertical spacing">
+              <i class="fa  fa-compress fa-rotate-135"></i>
+            </button>
+            <button id="leftRight" type="button" class="btn btn-default btn-sm" data-direction="horizontal" data-amount="1" title="Expand horizonal spacing">
+              <i class="fa fa-arrows-h"></i>
+            </button>
+            <button type="button" class="btn btn-default btn-sm" data-direction="horizontal" data-amount="-1" title="Compress horizonal spacing">
+              <i class="fa  fa-compress fa-rotate-45"></i>
+            </button>
+            <button type="button" class="btn btn-default btn-sm" id="sort_ascending" title="Sort deepest clades to the bototm">
+              <i class="fa fa-sort-amount-asc"></i>
+            </button>
+            <button type="button" class="btn btn-default btn-sm" id="sort_descending" title="Sort deepsest clades to the top">
+              <i class="fa fa-sort-amount-desc"></i>
+            </button>
+            <button type="button" class="btn btn-default btn-sm" id="sort_original" title="Restore original order">
+              <i class="fa fa-sort"></i>
+            </button>
+            <button type="button" class="btn btn-default btn-sm" title="Reset tree" onclick="refreshTree()">
+              <i class="fa fa-refresh"></i>
+            </button>
+
+          </div>
+          @*          <div class="btn-group myGroup" data-toggle="buttons">
+          <label class="btn btn-default btn-sm active" id="linear">
+          <input name="options" class="phylotree-layout-mode" data-mode="linear" autocomplete="off" checked="" title="Layout left-to-right" type="radio">
+          Linear
+          </label>
+          <label class="btn btn-default  btn-sm">
+          <input name="options" class="phylotree-layout-mode" data-mode="radial" autocomplete="off" title="Layout radially" type="radio">
+          Radial
+          </label>
+          </div>*@
+          <div class="btn-group myGroup" data-toggle="buttons">
+            <label class="btn btn-default btn-sm" >
+              <input class="phylotree-align-toggler" data-align="left" name="options-align" autocomplete="off"  title="Align tips labels to branches" type="radio">
+              <i class="fa fa-align-left"></i>
+            </label>
+            <label class="btn btn-default active btn-sm" id="defaultAlign">
+              <input class="phylotree-align-toggler" data-align="right" name="options-align" autocomplete="off" checked="checked" title="Align tips labels to the edge of the plot" type="radio">
+              <i class="fa fa-align-right"></i>
+
+            </label>
+          </div>
+        </div>
+
+        <svg id="tree_display" xmlns='http://www.w3.org/2000/svg' xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
+      </div>
+    </div>
+  </div>
+  <script>
+          var tree;
+          var treeData;
+          var x;
+          var y;
+
+          $(function () {
+
+              $.ajax({
+                url : "@routes.TreeController.readSize()",
+                type : "get",
+                dataType : "json",
+                success: function (data) {
+                  x = data.x;
+                  y = data.y;
+                }
+              });
+
+              mySearch();
+
+            $("#sort_original").on("click", function (e) {
+              tree.resort_children(function (a, b) {
+                return a["original_child_order"] - b["original_child_order"];
+              });
+            });
+
+            $("#sort_ascending").on("click", function (e) {
+              sort_nodes(true);
+            });
+
+            $("#sort_descending").on("click", function (e) {
+              sort_nodes(false);
+            });
+
+            $(".phylotree-layout-mode").on("change", function (e) {
+              if ($(this).is(':checked')) {
+                if (tree.radial() != ($(this).data("mode") == "radial")) {
+                //  tree.spacing_x(3, true);//高度
+                  tree.radial(!tree.radial()).placenodes().update();
+                }
+              }
+            });
+
+            $("[data-direction]").on("click", function (e) {
+              var which_function = $(this).data("direction") == 'vertical' ? tree.spacing_x : tree.spacing_y;
+              which_function(which_function() + (+$(this).data("amount"))).update();
+            });
+
+            $(".phylotree-align-toggler").on("change", function (e) {
+              if ($(this).is(':checked')) {
+                if (tree.align_tips($(this).data("align") == "right")) {
+                  tree.placenodes().update();//虚线
+                }
+              }
+            });
+          });
+
+          function sort_nodes(asc) {
+            tree.traverse_and_compute(function (n) {
+              var d = 1;
+              if (n.children && n.children.length) {
+                d += d3.max(n.children, function (d) {
+                  return d["count_depth"];
+                });
+              }
+              n["count_depth"] = d;
+            });
+            tree.resort_children(function (a, b) {
+              return (a["count_depth"] - b["count_depth"]) * (asc ? 1 : -1);
+            });
+          }
+
+          function refreshTree() {//处理树状图
+            var example_tree = treeData;
+            tree = d3.layout.phylotree()
+                    .svg(d3.select("#tree_display")).radial(false);//切换树图和圆图
+            tree.align_tips(true);//这一步将初始图变为带虚线图
+            tree.spacing_x(y, true);//高度
+            tree.spacing_y(x, true);//宽度
+
+            //tree.options ({'draw-size-bubbles' : true}, false);
+
+            $("label").removeClass("active");
+            $("#defaultAlign,#linear").addClass("active");
+            tree(example_tree)
+                    .layout();
+          }
+
+          function mySubmit() {
+            var html = $("svg:first").prop("outerHTML");
+            $("#svgHtml").val(html);
+            return true
+          }
+
+          function openInfo(obj) {
+              var id = obj.id;
+            $.ajax({
+              url: "/fern/rna/checkName?name=" + id,
+              type: "get",
+              dataType: "json",
+              success: function (data) {
+                if (data.valid == "false") {
+                  error("There is no RNA information");
+                } else {
+                //  window.location.href=("/fern/rna/moreInfoByName?name=" + id);
+               //   id = "Pronephrium_simplex";// 这是测试代码
+                  window.open("/fern/rna/moreInfoByName?name=" + id);
+                }
+              }
+            });
+          }
+
+          function mySearch() {
+              $("#search").attr("disabled", true).html("作图中...");
+              $("#treeContent").hide();
+              $("#charts").html("<img src='/assets/images/loading.gif'/>").show();
+              $.ajax({
+                url: "@routes.TreeController.plot()",
+                type: "get",
+                data: $("#form").serialize(),
+                success: function (data) {
+                  if (data.valid == "false") {
+                    swal("错误", data.message, "error");
+                    $("#treeContent").hide();
+                    $("#charts").html("没有图片结果生成！").show()
+                  } else {
+                    $("label").removeClass("active");
+                    $("#defaultAlign,#linear").addClass("active");
+                    $("#treeOut").html(data.tree);
+                    treeData = data.tree;
+                    refreshTree();
+
+                    $("#treeContent").show();
+                    $("#charts").hide()
+                  }
+                  $("#search").attr("disabled", false).html("开始作图").blur()
+                }
+              });
+          }
+
+
+  </script>
+
+}

@@ -1,0 +1,51 @@
+@home.main("") {
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <h2 class="page-heading"
+      style="text-align: left;
+        border-bottom: 5px solid #e9f3f4">Tree</h2>
+    </div>
+  </div>
+
+  <div id="tree" class="col-sm-5" style="height: 600px;overflow: auto;"></div>
+
+  <div id="chart" class="col-sm-7" style="height: 600px;border: solid 1px #DDDDDD;" align="center"></div>
+
+  <script src="@routes.Assets.at("bootstrap-treeview/bootstrap-treeview.js")"></script>
+
+  <script>
+          $(function () {
+            $.ajax({
+              url: "@routes.PPGIController.getJson()",
+              type: "post",
+              dataType: "json",
+              success: function (result) {
+                $('#tree').treeview({
+                  data: result,         // 数据源
+                  highlightSelected: true,    //是否高亮选中
+                  emptyIcon: '',   //没有子节点的节点图标
+                  multiSelect: false,    //多选
+                  selectedBackColor: 'undefined',
+                  selectedColor: 'undefined',
+                  showTags: true,
+                  levels: 1
+                });
+              },
+              error: function () {
+                alert("树形结构加载失败。")
+              }
+            });
+          });
+
+          function getPicture() {
+            $("#chart").empty();
+            $("#chart").html("<img src='/assets/images/process.png' style='height: 590px;'>");
+          }
+
+
+  </script>
+
+}
+
+

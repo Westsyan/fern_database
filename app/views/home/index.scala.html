@@ -1,0 +1,207 @@
+@home.main("Home") {
+
+    <style>
+            .thumbnail {
+                height: 200px;
+            }
+
+            .thumbnail > .row {
+                margin-top: 12px;
+            }
+    </style>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="jumbotron">
+                <p class="text-justify">
+                    A pteridophyte sensu lato is a vascular plant (with xylem and phloem) that reproduces via spores,
+                    and therefore was a member of the former and now invalid taxon Pteridophyta.
+                    The term is now used only informally to denote a fern (monilophyte) or lycophyte.
+                    Because pteridophytes produce neither flowers nor seeds, they are also referred to as "cryptogams".
+                    The pteridophytes include the ferns, horsetails, and the lycophytes (clubmosses, spikemosses,
+                    and quillworts). These are not a monophyletic group because ferns and horsetails are more closely
+                    related to seed plants than to the lycophytes.
+                </p>
+            </div>
+
+
+            <form method="get" action="/exoRBase/search/selectByGeneId" class="form-inline" autocomplete="off">
+                <div class="input-group col-sm-offset-6" style="width: 55%;margin-bottom: -58px;">
+                    <input type="text" name="id" class="form-control"
+                    required placeholder="e.g.TRAF3,CELSR1" id="geneName" autocomplete="off"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" type="submit"
+                        style="border-top-right-radius: 4px;
+                            border-bottom-right-radius: 4px">Search</button>
+                    </span>
+                </div>
+            </form>
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-database"></i> Resources</h3>
+
+
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <img src="@routes.Assets.at("images/fern1.jpg")" style="width: 100px;
+                                            height: 80px;
+                                            margin-top: 20px;">
+                                        <a style="margin-top: 15px" href="@routes.RnaController.toRNA()" target="_blank" class="btn btn-success" role="button"><i class="fa fa-hand-o-right"></i>
+                                            View</a>
+                                    </div>
+                                    <div class="col-sm-6" style="margin-left: -25px">
+                                        <h3>RNA Data
+                                            <p style="font-size: 16px">
+
+                                            </p>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <img src="@routes.Assets.at("images/fern2.jpg")" style="width: 100px;
+                                            height: 80px;
+                                            margin-top: 20px;">
+                                        <a style="margin-top: 15px" href="" target="_blank" class="btn btn-success" role="button"><i class="fa fa-hand-o-right"></i>
+                                            View</a>
+                                    </div>
+                                    <div class="col-sm-6" style="margin-left: -25px">
+                                        <h3>Chloroplast Data</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <img src="@routes.Assets.at("images/fern3.jpg")" style="width: 100px;
+                                            height: 80px;
+                                            margin-top: 20px;">
+                                        <a style="margin-top: 15px" href="@routes.PPGIController.toPPGI()" target="_blank" class="btn btn-success" role="button"><i class="fa fa-hand-o-right"></i>
+                                            View</a>
+                                    </div>
+                                    <div class="col-sm-6" style="margin-left: -25px">
+                                        <h3>Phenotype Data</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <img src="@routes.Assets.at("images/fern4.png")" style="width: 100px;
+                                            height: 80px;
+                                            margin-top: 20px;">
+                                        <a style="margin-top: 15px" href="" target="_blank" class="btn btn-success" role="button"><i class="fa fa-hand-o-right"></i>
+                                            View</a>
+                                    </div>
+                                    <div class="col-sm-6" style="margin-left: -25px">
+                                        <h3>Marker Data</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <img src="@routes.Assets.at("images/site.png")" style="width: 100px;
+                                            height: 80px;
+                                            margin-top: 20px;">
+                                        <a style="margin-top: 15px" href="@routes.MapController.toMaps()" target="_blank" class="btn btn-success" role="button"><i class="fa fa-hand-o-right"></i>
+                                            View</a>
+                                    </div>
+                                    <div class="col-sm-6" style="margin-left: -25px">
+                                        <h3>Geographical Data</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <img src="@routes.Assets.at("images/fern6.png")" style="width: 100px;
+                                            height: 80px;
+                                            margin-top: 20px;">
+                                        <a style="margin-top: 15px" href="" target="_blank" class="btn btn-success" role="button"><i class="fa fa-hand-o-right"></i>
+                                            View</a>
+                                    </div>
+                                    <div class="col-sm-6" style="margin-left: -25px">
+                                        <h3>Taxonomy Data</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+
+            <div align="center" style="margin-top: 20px">
+                <a href="http://www.csnbgsh.cn" target="_blank"
+                style="text-align: center">
+                    <img src="@routes.Assets.at("images/shucai.jpg")" width="95%" style="margin-bottom: 20px">
+                </a>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-cube"></i> Data Statistics</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-unstyled">
+                        <li><i class="fa fa-chevron-circle-right"></i> Samples: 100</li>
+                        <li><i class="fa fa-chevron-circle-right"></i> Single Copy Genes: 2,000</li>
+                        <li><i class="fa fa-chevron-circle-right"></i> Markers: 4,000</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-bookmark"></i> Release Notes</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-unstyled">
+                        <li><i class="fa fa-chevron-circle-right"></i>
+                            Pteridophyta Database is available online on April 2017.
+                        </li>
+                        <li><i class="fa fa-chevron-circle-right"></i>
+                            Genes is publicly accessible since January 2016.
+                        </li>
+                        <li><i class="fa fa-chevron-circle-right"></i>
+                            Markers is publicly accessible since November 2015.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+}

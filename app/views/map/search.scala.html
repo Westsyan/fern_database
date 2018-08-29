@@ -1,0 +1,200 @@
+@home.main("") {
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <h2 class="page-heading"
+      style="text-align: left;
+        border-bottom: 5px solid #e9f3f4">Search</h2>
+    </div>
+  </div>
+
+
+  <form class="registration-form form-horizontal" id="form"
+  accept-charset="UTF-8" method="post">
+
+
+    <div class="row">
+      <div class="form-group col-sm-6">
+        <label class="control-label col-sm-4">科名（中文科名）:</label>
+        <div class="col-sm-8">
+          <select class="checkbox form-control" name="family_ch" id="family_ch" multiple>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-6">
+        <label class="control-label col-sm-4">科名（Family）:</label>
+        <div class="col-sm-8">
+          <select class="checkbox form-control" name="family_en" id="family_en" multiple>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-6">
+        <label class="control-label col-sm-4">属名（中文属名）:</label>
+        <div class="col-sm-8">
+          <select name="genus_ch" id="genus_ch" class="checkbox form-control" multiple ></select>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-6">
+        <label class="control-label col-sm-4">属名（Genus）:</label>
+        <div class="col-sm-8">
+          <select name="genus_en" id="genus_en" class="checkbox form-control" multiple ></select>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-6">
+        <label class="control-label col-sm-4">种名（中文种名）:</label>
+        <div class="col-sm-8">
+          <select name="chinese" id="chinese" class="checkbox form-control" multiple></select>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-6">
+        <label class="control-label col-sm-4">种名（Species）:</label>
+        <div class="col-sm-8">
+          <select name="abbr" id="abbr" class="checkbox form-control" multiple ></select>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="actions col-sm-offset-2 col-sm-2">
+        <button type="button" class="btn btn-primary" style="width: 90%;" id="search" onclick="mySearch()">搜索</button>
+      </div>
+    </div>
+  </form>
+
+  <div style="display: none;" id="showTable">
+    <div id="toolbar"></div>
+
+    <table class="display table table-bordered" id="table" data-pagination="true" data-search="true"
+    data-toolbar="#toolbar" data-page-list="[10, 25, 50, 100, all]" data-search-align="left" data-multiple-search="true"
+    >
+      <thead>
+        <tr>
+          <th data-field="id" data-sortable="true">编号</th>
+          <th data-field="scientific_name" data-sortable="true">学名</th>
+          <th data-field="chinesename" data-sortable="true">中文名</th>
+          <th data-field="location" data-sortable="true">分布</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+
+  <script>
+
+          $(function () {
+
+            $.ajax({
+              url: "@routes.MapController.getAllFamilyCh",
+              type: "get",
+              success: function (data) {
+                $("#family_ch").select2({data: data});
+        //        $("#family_ch").val("").select2();
+              }
+            });
+
+            $.ajax({
+              url: "@routes.MapController.getAllFamilyEn",
+              type: "get",
+              success: function (data) {
+                $("#family_en").select2({
+                  data: data,
+                  maximumSelectionLength: 1,
+                  allowClear: true
+                });
+             //   $("#family_en").val("").select2();
+              }
+            });
+
+            $.ajax({
+              url: "@routes.MapController.getAllGenusCh()",
+              type: "get",
+              success: function (data) {
+                $("#genus_ch").select2({
+                  data: data,
+                  maximumSelectionLength: 1,
+                  allowClear: true
+                });
+             //   $("#genus_ch").val("").select2();
+              }
+            });
+
+            $.ajax({
+              url: "@routes.MapController.getAllGenusEn()",
+              type: "get",
+              success: function (data) {
+                $("#genus_en").select2({
+                  data: data,
+                  maximumSelectionLength: 1,
+                  allowClear: true
+                });
+             //   $("#genus_en").val("").select2();
+              }
+            });
+
+            $.ajax({
+              url: "@routes.MapController.getAllChinese()",
+              type: "get",
+              success: function (data) {
+                $("#chinese").select2({
+                  data: data,
+                  maximumSelectionLength: 1,
+                  allowClear: true
+                });
+              //  $("#chinese").val("").select2();
+              }
+            });
+
+            $.ajax({
+              url: "@routes.MapController.getAllAbbr()",
+              type: "get",
+              success: function (data) {
+                $("#abbr").select2({
+                  data: data,
+                  maximumSelectionLength: 1,
+                  allowClear: true
+                });
+             //   $("#abbr").val("").select2();
+              }
+            });
+
+          });
+
+          function mySearch() {
+            var index = layer.load(1);
+            $.ajax({
+              url: "@routes.MapController.getByPosition()",
+              type: "get",
+              dataType: "json",
+              data: $("#form").serialize(),
+              success: function (data) {
+                layer.close(index);
+                $("#table").bootstrapTable({data:data});
+                $("#table").bootstrapTable('load',data);
+                $("#showTable").show();
+              }
+            });
+          }
+
+
+  </script>
+
+}

@@ -1,0 +1,148 @@
+@()(implicit session: Session)
+@admin.main("") {
+
+
+  <style>
+          .c {
+            border: 0px solid transparent;
+            color: black;
+            table-layout: fixed;
+            line-height: 50px;
+          }
+
+          a {
+            color: black;
+          }
+
+
+          td {
+            margin-left: 2em;
+            font-size: 16px;
+            vertical-align:bottom;
+            height: 50px;
+            border: 0px solid transparent !important;
+
+          }
+
+          th {
+            font-size: 20px;
+            border: none;
+          }
+
+          .fixed-table-container {
+            border: 0px solid transparent;
+          }
+
+
+          .pagination-info{
+            display: none;
+          }
+
+          .message {
+            border-radius: 15px 15px 15px 15px;
+            border: solid 1px #DDDDDD;
+            height: 170px;
+            width: 90%;
+            font-size: 18px;
+            left: 5%;
+            margin-top: 10px;
+          }
+
+          /*            .message:hover{
+                          height: 210px;
+                          width: 95%;
+                      }*/
+
+          .labels {
+            float: left;
+            line-height: 20px;
+              font-size: 14px;
+            width: 30%;
+          }
+
+          .labels-text {
+              float: left;
+              line-height: 30px;
+          }
+
+  </style>
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <h2 class="page-heading"
+      style="text-align: left;
+        border-bottom: 5px solid #e9f3f4">Message Board Message</h2>
+    </div>
+  </div>
+
+  <div class="col-sm-11">
+    <div class="letter">
+
+      <div id="toolbar"></div>
+
+      <div class="table-contain">
+        <table id="table" class="table table-hover " data-pagination="true" data-search="true"
+        data-toolbar="#toolbar"  data-search-align="right" data-page-list="[10]" data-page-size="15"
+        data-multiple-search="true"
+        style="border: 0px solid transparent;">
+          <thead>
+            <tr>
+              <th data-field="title" id="title" title="news" style="height: 100px;">
+                Message Center</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+
+    $(function () {
+
+      $.ajax({
+        url: "@routes.MessageController.getMessage()",
+        type:"get",
+        dataType:"json",
+        success: function (data) {
+        $("#table").bootstrapTable({data:data});
+
+        }
+      })
+    });
+
+
+    function reloadTable() {
+        $.ajax({
+            url: "@routes.MessageController.getMessage()",
+            type : "get",
+            dataType : "json",
+            success: function (data) {
+                $('#table').bootstrapTable('load', data);
+            }
+        });
+    }
+
+    function deleteThis(obj) {
+        var id = obj.value;
+        deleting();
+        $.ajax({
+            url: "/fern/message/deleteMessage?id=" + id,
+            type: "delete",
+            dataType: "json",
+            success: function (data) {
+                if (data.valid == "true") {
+                    deleteAfter();
+                }
+            }
+        });
+    }
+
+
+
+
+  </script>
+
+
+}

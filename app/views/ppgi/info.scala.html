@@ -1,0 +1,68 @@
+@import models.Tables.PhotoInfoRow
+@(row:PhotoInfoRow,img:String)
+@home.main("Info"){
+
+  <style>
+          th {
+            width: 15%;
+          }
+  </style>
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <h2 class="page-heading"
+      style="text-align: left;
+        border-bottom: 5px solid #e9f3f4">Information</h2>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover table-bordered" style="table-layout: fixed;
+      word-wrap: break-word">
+      <tbody>
+        <tr>
+          <th>编号</th>
+          <td>@row.id</td>
+        </tr>
+        <tr>
+          <th>名称</th>
+          <td>@row.name</td>
+        </tr>
+        <tr>
+          <th>目</th>
+          <td>@row.order</td>
+        </tr>
+        <tr>
+          <th>科</th>
+          <td>@row.family</td>
+        </tr>
+        <tr>
+          <th>属</th>
+          <td>@row.genus</td>
+        </tr>
+        <tr>
+          <th>中文名</th>
+          <td>@row.chinesename</td>
+        </tr>
+        <tr>
+          <th>拍摄人</th>
+          <td>@row.author</td>
+        </tr>
+        <tr>
+          <th>拍摄地</th>
+          <td>@row.place</td>
+        </tr>
+        <tr>
+          <th>照片</th>
+          <td><a target="_blank" href="/fern/ppgi/openImg?id=@row.id"><img src="@img" width="95%"></a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+
+
+
+
+}

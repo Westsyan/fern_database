@@ -1,0 +1,114 @@
+@import models.Tables.RnaInfoRow
+@(row:RnaInfoRow)
+@home.main(""){
+  <style>
+          th {
+            width: 35%;
+          }
+  </style>
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <h2 class="page-heading"
+      style="text-align: left;
+        border-bottom: 5px solid #e9f3f4">Information</h2>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover table-bordered" style="table-layout: fixed;
+      word-wrap: break-word">
+      <tbody>
+        <tr>
+          <th>Sample ID</th>
+          <td>@row.sampleId</td>
+        </tr>
+        <tr>
+          <th>Species Name</th>
+          <td>@row.speciesName</td>
+        </tr>
+        <tr>
+          <th>中文名称</th>
+          <td>@row.chineseName</td>
+        </tr>
+        <tr>
+          <th>Order</th>
+          <td>@row.order</td>
+        </tr>
+        <tr>
+          <th>Sub Order</th>
+          <td>@row.subOrder</td>
+        </tr>
+        <tr>
+          <th>Family</th>
+          <td>@row.family</td>
+        </tr>
+        <tr>
+          <th>Sub Family</th>
+          <td>@row.subFamily</td>
+        </tr>
+        <tr>
+          <th>Genus</th>
+          <td>@row.genus</td>
+        </tr>
+        <tr>
+          <th>Tissue</th>
+          <td>@row.tissue</td>
+        </tr>
+        <tr>
+          <th>Sampling Location</th>
+          <td>@row.samplingLocation</td>
+        </tr>
+        <tr>
+          <th>Instrument</th>
+          <td>@row.instrument</td>
+        </tr>
+        <tr>
+        <th>Layout</th>
+        <td>@row.layout</td>
+      </tr>
+        <tr>
+          <th>Raw Data(G)</th>
+          <td>@row.rawData</td>
+        </tr>
+        <tr>
+          <th>Q30%</th>
+          <td>@row.q30</td>
+        </tr>
+        <tr>
+          <th>Number Of Contigs</th>
+          <td>@row.numberOfContigs</td>
+        </tr>
+        <tr>
+          <th>N50(bp)</th>
+          <td>@row.n50</td>
+        </tr>
+        <tr>
+          <th>BUSCO-Completed rate</th>
+          <td>@row.buscoCompletedRate</td>
+        </tr>
+        <tr>
+        <th>Biosample ID In NCBI</th>
+        <td>@row.biosampleIdInNcbi</td>
+      </tr>
+        <tr>
+          <th>Species Assembled Transcripts</th>
+          <td><a href="/fern/rna/download?id=@row.id&&code=1">FASTA &nbsp;&nbsp;<i class="fa fa-download"></i></a></td>
+        </tr>
+        <tr>
+          <th>Species CDS</th>
+          <td><a href="/fern/rna/download?id=@row.id&&code=2">FASTA &nbsp;&nbsp;<i class="fa fa-download"></i></a></td>
+        </tr>
+        <tr>
+          <th>Species PEP</th>
+          <td><a href="/fern/rna/download?id=@row.id&&code=3">FASTA &nbsp;&nbsp;<i class="fa fa-download"></i></a></td>
+        </tr>
+        <tr>
+          <th>Species Gene</th>
+          <td><a href="/fern/rna/download?id=@row.id&&code=4">GFF &nbsp;&nbsp;<i class="fa fa-download"></i></a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+}

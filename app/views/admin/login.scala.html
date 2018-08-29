@@ -1,0 +1,40 @@
+@()(implicit flash: Flash, session: Session)
+@admin.main("Login") {
+	<div class="container">
+		<div class="col-sm-12">
+			<section class="main-col" style="margin: 0 auto;">
+				<div class="register">
+					<h2 class="page-heading" style="font-size: 25px;">Log in</h2>
+					<form id="loginForm" style="max-width: 320px;" class="registration-form" accept-charset="UTF-8" action="/fern/admin/login">
+
+						<div class="col-sm-offset-4">
+							<span class="error" style="line-height: 35px;margin-left: -25px;">@flash.get("info")</span>
+						</div>
+
+
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon"><em
+								class="fa fa-user icon2x"></em></span>
+								<input id="account" name="account" placeholder="Account" autofocus="autofocus" type="text" class="form-control" required value=""/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon"><em
+								class="fa fa-key icon2x"></em></span>
+								<input id="password" name="password" placeholder="Password" type="password" autofocus="autofocus" class="form-control" required value="" maxlength="30"/>
+							</div>
+						</div>
+
+						<div class="actions">
+							<input type="submit" id="loginSubmit" value="Log in"
+							class="btn btn-primary btn-lg">
+						</div>
+					</form>
+				</div>
+			</section>
+		</div>
+	</div>
+}

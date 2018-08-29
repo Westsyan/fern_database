@@ -1,0 +1,115 @@
+@home.main("") {
+
+    <style>
+            .revamp {
+                background-color: white;
+                border: 0px;
+                font-size: 15px;
+                margin-left: -60px;
+                margin-top: 30px;
+                color: #333333;
+                position: absolute;
+
+            }
+
+            .revamp:hover {
+                border: solid 1px ;
+                border-color: darkgray;
+                border-radius: 5px 5px 5px 5px;
+            }
+
+            .downa {
+                border: none;
+                color: #666666;
+                margin-top: 20px;
+                position: absolute;
+                margin-left: -50px;
+                font-size: 40px;
+                background-color: white;
+
+            }
+
+            .downbtn:hover {
+                background-color: lightgrey;
+                border: 1px black;
+            }
+    </style>
+
+    <div class="row">
+        <div class="form-group col-sm-12">
+            <h2 class="page-heading"
+            style="text-align: left;
+                border-bottom: 5px solid #e9f3f4;
+                letter-spacing: 0px"><font style="font-size: 30px">OGDraw</font></h2>
+        </div>
+    </div>
+
+
+    <form class="registration-form form-horizontal" id="form"
+    accept-charset="UTF-8" method="post">
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label col-sm-3">Sample:</label>
+                <div class="col-sm-9">
+                    <select class="checkbox form-control" name="sample" id="sample" >
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <div class="actions col-sm-offset-2 col-sm-2">
+                    <button type="button" class="btn btn-primary" style="width: 100%;" id="search" onclick="mySearch()">
+                        生成图片</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row" style="display: none;" id="image">
+        <hr>
+        <a id="downloadJpg" title="download" style="float: right;"><button class="revamp"><i class="fa fa-download"></i></button></a>
+
+        <div class="well">
+            <div id="charts">
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+            $(function () {
+
+
+                $.ajax({
+                    url: "@routes.ChloroplastController.getSample()",
+                    type: "get",
+                    success: function (data) {
+                        $("#sample").select2({data: data});
+                    }
+                });
+
+            });
+
+
+            function mySearch() {
+                var index = layer.load(1);
+                $.ajax({
+                    url: "@routes.ChloroplastController.getImage()",
+                    type: "get",
+                    dataType: "json",
+                    data: $("#form").serialize(),
+                    success: function (data) {
+                        $("#downloadJpg").attr('href','/fern/chloroplast/downloadJpg?id=' + data.id);
+                        $("#charts").html(data.jpg);
+                        $("#image").show();
+                        layer.close(index);
+                    }
+                });
+            }
+
+    </script>
+}

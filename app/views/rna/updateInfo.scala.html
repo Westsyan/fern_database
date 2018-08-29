@@ -1,0 +1,414 @@
+@import models.Tables.RnaInfoRow
+@(row : RnaInfoRow)(implicit session: Session)
+@admin.main("") {
+
+    <div class="row">
+        <div class="form-group col-sm-12">
+            <h2 class="page-heading"
+            style="text-align: left;
+                border-bottom: 5px solid #e9f3f4">Update @row.sampleId</h2>
+        </div>
+    </div>
+
+
+    <form class="registration-form" id="form"
+    accept-charset="UTF-8" style="margin: 20px;" enctype="multipart/form-data">
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >Sample ID:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="sampleid" type="text" name="sampleid" value="@row.sampleId" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >Species Name:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="species" type="text" name="species" value="@row.speciesName"
+                 class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >中文名称:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="chinese" type="text" name="chinese" class="form-control" value="@row.chineseName" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >Order:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="order" type="text" name="order" class="form-control" value="@row.order" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6" style="display: none">
+            <div class="col-sm-4" align="right">
+                <label >Sub Order:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="sub_order" type="text" name="sub_order" class="form-control" value="@row.subOrder" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >Family:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="family" type="text" name="family" class="form-control" value="@row.family" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6" style="display: none;">
+            <div class="col-sm-4" align="right">
+                <label >Sub Family:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="sub_family" type="text" name="sub_family" class="form-control" value="@row.subFamily" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >Genus:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="genus" type="text" name="genus" class="form-control" value="@row.genus" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >Tissue:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="tissue" type="text" name="tissue" class="form-control" value="@row.tissue" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >Sampling Location:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="sampling_location" type="text" name="sampling_location" class="form-control" value="@row.samplingLocation" required>
+            </div>
+        </div>
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >Instrument:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="instrument" type="text" name="instrument" class="form-control" value="@row.instrument" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >Layout:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="layout" type="text" name="layout" class="form-control" value="@row.layout" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >Raw Data(G):</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="raw_data" type="text" name="raw_data" class="form-control" value="@row.rawData" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >Q30%:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="q30" type="text" name="q30" class="form-control" value="@row.q30" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >Number Of Contigs:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="contigs" type="text" name="contigs" class="form-control" value="@row.numberOfContigs" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >N50(bp):</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="n50" type="text" name="n50" class="form-control" value="@row.n50" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >BUSCO Completed Rate:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="rate" type="text" name="rate" class="form-control" value="@row.buscoCompletedRate" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <div class="col-sm-4" align="right">
+                <label >Biosample ID In NCBI:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="ncbi" type="text" name="ncbi" class="form-control" value="@row.biosampleIdInNcbi" required>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-12">
+            <div class="col-sm-2" align="right">
+                <label >Species Assembled Transcripts:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="transcripts" type="file" name="transcripts" class="file" data-show-preview="false"
+                data-show-upload="false" accept=".fa,.fasta" >
+            </div>
+        </div>
+
+        <div class="form-group col-sm-12">
+            <div class="col-sm-2" align="right">
+                <label >Species CDS:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="cds" type="file" name="cds" class="file" data-show-preview="false"
+                data-show-upload="false" accept=".fa,.fasta" >
+            </div>
+        </div>
+
+        <div class="form-group col-sm-12">
+            <div class="col-sm-2" align="right">
+                <label >Species PEP:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="pep" type="file" name="pep" class="file" data-show-preview="false"
+                data-show-upload="false" accept=".fa,.fasta" >
+            </div>
+        </div>
+
+        <div class="form-group col-sm-12">
+            <div class="col-sm-2" align="right">
+                <label >Species Gene:</label>
+            </div>
+            <div class="col-sm-8">
+                <input id="gene" type="file" name="gene" class="file" data-show-preview="false"
+                data-show-upload="false" accept=".gff" >
+            </div>
+        </div>
+
+        <div class="form-group col-sm-12">
+            <div class="actions col-sm-offset-2 col-sm-6">
+                <button type="button" class="btn btn-primary" style="width: 90%;" id="upload" onclick="Upload()">
+                    Upload</button>
+            </div>
+        </div>
+
+
+    </form>
+
+
+    <script>
+
+            $(function () {
+                formValidation();
+            });
+
+
+            function formValidation() {
+                $('#form').formValidation({
+                    framework: 'bootstrap',
+                    icon: {
+                        valid: 'glyphicon glyphicon-ok',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        sampleid: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                },
+                                remote: {
+                                    type: 'POST',
+                                    url: '/fern/back/rna/checkInfoSampleId?id=' + @row.id,
+                                    message: "The Sample ID is existed!",
+                                    delay: 1000
+                                }
+                            }
+                        },
+                        species: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        chinese: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        order: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        sub_order: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        family: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        sub_family: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        genus: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        tissue: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        sampling_location: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        instrument: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        layout: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        raw_data: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        q30: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        contigs: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        n50: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        rate: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        },
+                        ncbi: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please input a value！'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+
+
+            function Upload() {
+                var form = $("#form");
+                var fv = form.data("formValidation");
+                fv.validate();
+                if (fv.isValid()) {
+                    var index = layer.load(1);
+                    var form = new FormData($("#form")[0]);
+                    $.ajax({
+                        url: "/fern/back/rna/updateRNA?id=" + @row.id,
+                        type: "put",
+                        dataType: "json",
+                        processData: false,
+                        contentType: false,
+                        data: form,
+                        success: function (data) {
+                            if (data.valid == "false") {
+                                layer.close(index);
+                                swal("Error!", data.message, "error")
+                            } else {
+                                window.location.replace("@routes.RnaController.toUpdateRNA()");
+                            }
+                        }
+                    })
+                }
+            }
+
+
+
+    </script>
+
+
+}

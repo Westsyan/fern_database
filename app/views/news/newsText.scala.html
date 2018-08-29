@@ -1,0 +1,42 @@
+@(id: Int)
+@home.main("") {
+
+
+    <div class="row">
+        <div class="form-group col-sm-12">
+            <h2 class="page-heading"
+            style="text-align: left;
+                border-bottom: 5px solid #e9f3f4">News</h2>
+        </div>
+    </div>
+
+
+
+    <div class="col-sm-11">
+        <div class="letter">
+            <div id="title" style="font-size: 35px;" align="center"></div>
+            <div id="createdate" align="center" style="color: lightslategray;margin-top: 5px;margin-bottom: 5px;"></div>
+            <div id="a"></div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+            $.ajax({
+                url: "/fern/ppgi/openNews?id=" + @id,
+                type: "get",
+                dataType: "json",
+                success: function (data) {
+                    $("#title").append(data.title);
+                    $("#createdate").append(data.createdate);
+                    $("#a").append(data.array);
+                }
+            })
+
+
+
+    </script>
+
+}

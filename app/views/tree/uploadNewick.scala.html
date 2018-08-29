@@ -1,0 +1,102 @@
+@()(implicit session: Session)
+@admin.main(""){
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <h2 class="page-heading"
+      style="text-align: left;
+        border-bottom: 5px solid #e9f3f4">Upload Tree Newick File</h2>
+    </div>
+  </div>
+
+  <form class="registration-form" id="form"
+  accept-charset="UTF-8" style="margin: 20px;" enctype="multipart/form-data">
+
+    <div class="form-group col-sm-12">
+      <div class="col-sm-2" align="right">
+        <label>Select newick file:</label>
+      </div>
+      <div class="col-sm-6">
+        <input id="input-1" type="file" class="file" name="file" data-show-preview="false"
+        data-show-upload="false" accept=".newick">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-12">
+        <div class="col-md-2"></div>
+        <div class="actions">
+          <input type="button" id="fileSubmit" value="update news"
+          class="btn btn-primary btn-lg col-sm-6" onclick="addFile()">
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+  <script>
+          $(function () {
+            formValidation()
+          });
+
+
+          function addFile() {
+            var form = $("#form");
+            var fv = form.data("formValidation");
+            fv.validate();
+            if (fv.isValid()) {
+              var form = new FormData($("#form")[0]);
+              var index = layer.load(1);
+              $.ajax({
+                url: "@routes.TreeController.addNewick()",
+                type: "post",
+                data: form,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                  if(data.valid == "false"){
+                    layer.close(index);
+                    error(data.message)
+                  }else{
+                    window.location.replace("@routes.TreeController.toUploadTree()");
+                  }
+                }
+              });
+            }
+          }
+
+
+          function formValidation() {
+            $('#form').formValidation({
+              framework: 'bootstrap',
+              icon: {
+                valid: 'glyphicon glyphicon-ok',
+                validating: 'glyphicon glyphicon-refresh'
+              },
+              fields: {
+                file: {
+                  validators: {
+                    notEmpty: {
+                      message: 'Please choose news file！'
+                    },
+                    file: {
+                      extension: 'newick',
+                      message: 'News file must is a newick file！'
+                    }
+                  }
+                }
+              }
+            });
+          }
+
+
+          $("#input-1").fileinput({
+            showPreview: false,
+          });
+
+
+  </script>
+
+
+
+}

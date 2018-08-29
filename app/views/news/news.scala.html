@@ -1,0 +1,96 @@
+@home.main("") {
+
+    <style>
+            .c {
+                border: 0px solid transparent;
+                color: black;
+                table-layout: fixed;
+                line-height: 50px;
+            }
+
+            a {
+                color: black;
+            }
+
+            h4 {
+                margin-top: 20px;
+                text-indent: 2em;
+            }
+
+            td {
+                margin-left: 2em;
+                font-size: 16px;
+                vertical-align:bottom;
+                height: 50px;
+                border: 0px solid transparent !important;
+
+            }
+
+            th {
+                font-size: 20px;
+                border: none;
+            }
+
+            .fixed-table-container {
+                border: 0px solid transparent;
+            }
+
+
+        .pagination-info{
+            display: none;
+        }
+
+    </style>
+
+    <div class="row">
+        <div class="form-group col-sm-12">
+            <h2 class="page-heading"
+            style="text-align: left;
+                border-bottom: 5px solid #e9f3f4">News</h2>
+        </div>
+    </div>
+
+    
+    <div class="col-sm-11">
+        <div class="letter">
+
+                <div id="toolbar"></div>
+
+                <div class="table-contain">
+                    <table id="table" class="table table-hover " data-pagination="true" data-search="true"
+                    data-toolbar="#toolbar"  data-search-align="right" data-page-list="[10]" data-page-size="15"
+                     data-multiple-search="true"
+                    style="border: 0px solid transparent;">
+                        <thead>
+                            <tr>
+                                <th data-field="title" id="title" title="news" style="height: 100px;">
+                                    News Center</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+        </div>
+    </div>
+
+
+
+    
+    <script>
+        $(function () {
+            $.ajax({
+                url : "@routes.NewsController.getAllNewsTitle()",
+                type:"get",
+                dataType: "json",
+                success :function (data) {
+                    $("#table").bootstrapTable({
+                        classes: 'c',
+                        data:data})
+                }
+            })
+        })
+
+
+
+    </script>
+    
+}

@@ -1,0 +1,391 @@
+@()(implicit session: Session)
+@admin.main("") {
+    <div class="row">
+        <div class="form-group col-sm-12">
+            <h2 class="page-heading"
+            style="text-align: left;
+                border-bottom: 5px solid #e9f3f4">Add News</h2>
+        </div>
+    </div>
+
+    <form class="registration-form" id="form"
+    accept-charset="UTF-8" style="margin: 20px;" enctype="multipart/form-data">
+
+        <div class="form-group col-sm-12">
+            <div class="col-sm-2" align="right">
+                <label >News title:</label>
+            </div>
+            <div class="col-sm-6">
+                <input id="title" type="text" name="title" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group col-sm-12">
+            <div class="col-sm-2" align="right">
+                <label>Select news file:</label>
+            </div>
+            <div class="col-sm-6">
+                <input id="input-1" type="file" class="file" name="file" data-show-preview="false"
+                data-show-upload="false" accept=".mht,.mhtml">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-sm-12">
+                <div class="col-md-2"></div>
+                <div class="actions">
+                    <input type="button" id="fileSubmit" value="update news"
+                    class="btn btn-primary btn-lg col-sm-6" onclick="addNews()">
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+
+    <hr>
+
+    <div id="toolbar">
+    </div>
+    <div class="table-responsive panel-collapse collapse in " >
+        <table class="display table table-bordered" id="table" data-pagination="true" data-search="true"
+        data-toolbar="#toolbar" data-page-list="[10, 25, 50, 100]" data-search-align="left" data-multiple-search="true"
+        style="word-wrap: break-word">
+            <thead>
+                <tr>
+                    <th data-field="title" data-sortable="true" id="title" title="News title">News Title</th>
+                    <th data-field="createdate" data-sortable="true" id="createdate" title="Create Date">Create Date</th>
+                    <th data-field="operation" data-sortable="true" id="operation" title="Operation">Operation</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div id="update" class="modal fade modal-margin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 600px;">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">
+                        <span id="lblAddTitle" style="font-weight: bold">修改标题：</span>
+                    </h4>
+                </div>
+                <form id="updateForm" data-toggle="validator">
+                    <div class="modal-body">
+                        <div class="row-fluid">
+
+                            <div class="row">
+
+                                <div class="col-sm-8" style="display: none;" >
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            ID：
+                                        </label>
+                                        <input class="form-control indent" id="titleid" name="titleid" readonly="readonly" >
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            新的标题: </label>
+                                        <input class="form-control indent" name="newtitle" id="newtitle" >
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-info">
+                        <button type="submit" class="btn blue" onclick="sureUpdate()">确定</button>
+                        <button type="button" class="btn green" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="rest" class="modal fade modal-margin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 800px;">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">
+                        <span id="lblAddTitle" style="font-weight: bold">重新上传正文：</span>
+                    </h4>
+                </div>
+                <form id="resetForm" data-toggle="validator" class="registration-form form-horizontal">
+                    <div class="modal-body">
+                        <div class="row-fluid">
+
+                            <div class="form-group" style="display: none;">
+                                <div class="col-sm-8 indent">
+                                    <input name="resetId" id="resetId" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-2" align="right">
+                                    <label>Title:</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input name="resetTitle" id="resetTitle" class="form-control"   readonly="readonly"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-2" align="right">
+                                    <label>Select news file:</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input id="input-1" type="file" class="file" name="file" data-show-preview="false"
+                                    data-show-upload="false" accept=".mht,.mhtml">
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-info">
+                        <button type="button" class="btn blue" onclick="Running()">确定</button>
+                        <button type="button" class="btn green" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteShow" class="modal fade modal-margin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: 200px;">
+        <div class="modal-dialog" style="width: 400px;">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h4 class="modal-title" align="center" id="title1">
+                        <span id="deleteTitle" style="font-weight: bold">删除新闻
+                            <b id="dtitle">
+
+                            </b>
+                        </span>
+                    </h4>
+                    <h4 class="modal-title" align="center" id="title2" style="display: none">
+                        <span id="deleteTitle" style="font-weight: bold">删除中...</span>
+                    </h4>
+                    <h4 class="modal-title" align="center" id="title3" style="display: none">
+                        <span id="deleteTitle" style="font-weight: bold">删除成功</span>
+                    </h4>
+                </div>
+                <div class="row-fluid" align="center" >
+                    <div id="warn1">
+                        <img src="/assets/images/warning.png">
+                    </div>
+                    <div id="warn2" style="display: none;">
+                        <img src="/assets/images/timg2.gif" style="height: 109px;">
+                    </div>
+                    <div id="warn3" style="display: none;">
+                        <img src="/assets/images/success.png">
+                    </div>
+                </div>
+                <div class="modal-footer bg-info">
+                    <div align="center">
+                        <button type="button" class="btn red" onclick="deleteNews(this)" style="width: 100px;" id="btn1">确定</button>
+                        <button type="button" class="btn green" data-dismiss="modal" style="width: 100px;" id="btn2">取消</button>
+                        <button type="button" class="btn green" onclick="updateDelete()" style="width: 100px;display: none;" id="btn3">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+            $(function () {
+                updateTable();
+                formValidation()
+            });
+
+            function addNews() {
+                var form = $("#form");
+                var fv = form.data("formValidation");
+                fv.validate();
+                if (fv.isValid()) {
+                    var form = new FormData($("#form")[0]);
+                    var index = layer.load(1);
+                    $.ajax({
+                        url: "@routes.NewsController.addNews()",
+                        type: "post",
+                        data: form,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if(data.valid == "false"){
+                                layer.close(index);
+                                error(data.message)
+                            }else{
+                                window.location.replace("@routes.NewsController.addNewsBefore()");
+                            }
+                        }
+                    });
+                }
+            }
+
+            function Running() {
+                var form = new FormData($("#resetForm")[0]);
+                var index = layer.load(1);
+                $.ajax({
+                    url: "@routes.NewsController.resetNews()",
+                    type: "put",
+                    data: form,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        layer.close(index);
+                        $("#rest").modal("hide");
+                        if(data.valid == "false"){
+                            cpm(data.message)
+                        }else{
+                            cpm("上传成功");
+                        }
+                    }
+                });
+            }
+
+            function updateTitle(obj) {
+                var name = obj.value;
+                var id = obj.id;
+                $("#newtitle").empty();
+                $("#newtitle").val(name);
+                $("#titleid").val(id);
+                $("#update").modal("show")
+            }
+
+            function restart(obj){
+                var id = obj.value;
+                $.ajax({
+                    url : "/fern/back/news/getById?id=" + id,
+                    type : "get",
+                    dateType: "json",
+                    success : function (data) {
+                        $("#resetTitle").val(data.title);
+                        $("#resetId").val(data.id);
+                        $("#rest").modal("show");
+                    }
+                })
+            }
+
+            function sureUpdate() {
+                var form = $("#updateForm");
+                var fv = form.data("formValidation");
+                fv.validate();
+                if (fv.isValid()) {
+                    var index = layer.load(1, {
+                        shade: [0.1, '#fff']
+                    });
+                    $.ajax({
+                        url: "@routes.NewsController.updateTitle()",
+                        type: "put",
+                        dataType: "json",
+                        data: $("#updateForm").serialize(),
+                        success: function (data) {
+                            if (data == "success") {
+                                layer.close(index);
+                                $("#update").modal("hide")
+                                cpm("修改成功");
+                            }
+                        }
+                    })
+                }
+            }
+
+            function updateTable() {
+                $.ajax({
+                    url : "@routes.NewsController.getAllNews()",
+                    type : "get",
+                    dataType : "json",
+                    success: function (data) {
+                        $('#table').bootstrapTable({data: data});
+                    }
+                });
+            }
+
+            function reloadTable() {
+                $.ajax({
+                    url : "@routes.NewsController.getAllNews()",
+                    type : "get",
+                    dataType : "json",
+                    success: function (data) {
+                        $('#table').bootstrapTable('load', data);
+                    }
+                });
+            }
+
+            function deleteNews(obj) {
+                var id = obj.value;
+                deleting();
+                $.ajax({
+                    url: "/fern/back/news/deleteNews?id=" + id,
+                    type: "delete",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.valid == "true") {
+                            deleteAfter();
+                        }
+                    }
+                });
+            }
+
+            function updateDelete() {
+                $("#deleteShow").modal("hide");
+                reloadTable();
+            }
+
+
+            function formValidation() {
+                $('#form').formValidation({
+                    framework: 'bootstrap',
+                    icon: {
+                        valid: 'glyphicon glyphicon-ok',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        file: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Please choose news file！'
+                                },
+                                file: {
+                                    extension: 'mht',
+                                    message: 'News file must is a mht/mhtml file！'
+                                }
+                            }
+                        }
+                    }
+                });
+                $('#updateForm').formValidation({
+                    framework: 'bootstrap',
+                    icon: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        newtitle: {
+                            validators: {
+                                notEmpty: {
+                                    message: '不能为空!'
+                                },
+                                different: {
+                                    field: 'title',
+                                    message: '不能与原样品名相同'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+
+            $("#input-1").fileinput({
+                showPreview: false,
+            });
+
+    </script>
+}

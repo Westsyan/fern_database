@@ -1,0 +1,262 @@
+@home.main("") {
+
+    <style>
+            .c {
+                border: 0px solid transparent;
+                font-size: 14px;
+                table-layout: fixed;
+                width: 20%;
+                line-height: 50px;
+            }
+
+            /*            .fixed-table-container {
+                            border: 0px solid transparent;
+                        }*/
+
+            .table-contain {
+                width: 19%;
+                border: none;
+                float: left;
+                margin-left: 10px;
+                height: 390px;
+            }
+
+            tbody {
+                display: block;
+                max-height: 367px;
+                overflow-y: auto;
+            }
+
+            td {
+                height: 50px;
+                white-space: nowrap;
+                overflow: auto;
+                word-break: keep-all;
+                text-indent: 1em;
+            }
+
+            th {
+                height: 50px;
+                border-bottom: 1px solid;
+            }
+
+            a {
+                color: black;
+            }
+
+            .b-type {
+                font-size: 16px;
+                margin-left: 5px;
+            }
+    </style>
+
+    <div class="row">
+        <div class="form-group col-sm-12">
+            <h2 class="page-heading"
+            style="text-align: left;
+                border-bottom: 5px solid #e9f3f4">Browse</h2>
+        </div>
+    </div>
+
+
+    <div>
+        <b class="b-type">classify</b>
+        <b style="display: none;" id="classHead" class="b-type"><i class="fa fa-caret-right"></i>
+            <a class="className" style="margin-left: 5px;" onclick='getOrderes(this)'></a></b>
+        <b style="display: none;" id="orderHead" class="b-type"><i class="fa fa-caret-right"></i>
+            <a class="orderName" style="margin-left: 5px;" onclick='getFamilies(this)'></a></b>
+        <b style="display: none;" id="familyHead" class="b-type"><i class="fa fa-caret-right"></i>
+            <a class="familyName" style="margin-left: 5px;" onclick='getSubFamilies(this)'></a></b>
+        <b style="display: none;" id="subfamilyHead" class="b-type"><i class="fa fa-caret-right"></i>
+            <a class="subfamilyName" style="margin-left: 5px;" onclick='getGenus(this)'></a></b>
+
+
+    </div>
+
+    <div style="margin-top: 2em;">
+
+        <div class="table-contain" >
+            <table id="classesTable">
+                <thead>
+                    <tr>
+                        <th data-field="classes" data-sortable="true" id="classes" title="Class/Sub Class" >
+                            Class/Sub Class(<b id="classNum"></b>)</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div class="table-contain" id="order" style="display: none;">
+            <table id="orderesTable">
+                <thead>
+                    <tr>
+                        <th data-field="orderes" data-sortable="true" id="orderes" title="Order/Sub Order" >
+                            Order/Sub Order(<b id="orderNum"></b>)</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div class="table-contain" id="family" style="display: none;">
+            <table id="familiesTable">
+                <thead>
+                    <tr>
+                        <th data-field="families" data-sortable="true" id="families" title="Family" >
+                            Family(<b id="familyNum"></b>)</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div class="table-contain" id="subfamily" style="display: none;">
+            <table id="subfamiliesTable">
+                <thead>
+                    <tr>
+                        <th data-field="subfamilies" data-sortable="true" id="subfamilies" title="Sub Family" >
+                            Sub Family(<b id="subfamilyNum"></b>)</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div class="table-contain" id="genuses" style="display: none;">
+            <table id="genusTable">
+                <thead>
+                    <tr>
+                        <th data-field="genus" data-sortable="true" id="genus" title="Genus(Species)" >Genus(Species)(<b id="genusNum"></b>
+                            )</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+
+    <script>
+
+
+            $(function () {
+
+
+                $.ajax({
+                    url: "@routes.PPGIController.getAllClasses()",
+                    type: "get",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#classNum").text(data.number);
+                        $('#classesTable').bootstrapTable({
+                            classes: 'c',
+                            sortable: false,
+                            data: data.array
+                        });
+                        $('#orderesTable').bootstrapTable({
+                            classes: 'c',
+                            sortable: false
+                        });
+                        $('#familiesTable').bootstrapTable({
+                            classes: 'c',
+                            sortable: false
+                        });
+                        $('#subfamiliesTable').bootstrapTable({
+                            classes: 'c',
+                            sortable: false
+                        });
+                        $('#genusTable').bootstrapTable({
+                            classes: 'c',
+                            sortable: false
+                        });
+
+                    }
+                });
+
+            });
+
+            function getOrderes(obj) {
+                var id = obj.id;
+                var head = obj.text;
+                $.ajax({
+                    url: "/fern/ppgi/getOrderes?id=" + id,
+                    type: "get",
+                    dataType: "json",
+                    success: function (data) {
+                        $(".className").attr('id', id);
+                        $(".className").text(head);
+                        $("#classHead").show();
+                        $("#orderNum").text(data.number);
+                        $('#orderesTable').bootstrapTable('load', data.array);
+                        $("#orderHead").hide();
+                        $("#familyHead").hide();
+                        $("#subfamilyHead").hide();
+                        $("#family").hide();
+                        $("#subfamily").hide();
+                        $("#genuses").hide();
+                        $("#order").show();
+                    }
+                });
+            }
+
+            function getFamilies(obj) {
+                var id = obj.id;
+                var head = obj.text;
+                $.ajax({
+                    url: "/fern/ppgi/getFamilies?id=" + id,
+                    type: "get",
+                    dataType: "json",
+                    success: function (data) {
+                        $(".orderName").attr('id', id);
+                        $(".orderName").text(head);
+                        $("#orderHead").show();
+                        $("#familyNum").text(data.number);
+                        $('#familiesTable').bootstrapTable('load', data.array);
+                        $("#family").show();
+                        $("#familyHead").hide();
+                        $("#subfamilyHead").hide();
+                        $("#subfamily").hide();
+                        $("#genuses").hide();
+                    }
+                });
+            }
+
+            function getSubFamilies(obj) {
+                var id = obj.id;
+                var head = obj.text;
+                $.ajax({
+                    url: "/fern/ppgi/getSubFamilies?id=" + id,
+                    type: "get",
+                    dataType: "json",
+                    success: function (data) {
+                        $(".familyName").attr('id', id);
+                        $(".familyName").text(head);
+                        $("#familyHead").show();
+                        $("#subfamilyNum").text(data.number);
+                        $('#subfamiliesTable').bootstrapTable('load', data.array);
+                        $("#subfamily").show();
+                        $("#subfamilyHead").hide();
+                        $("#genuses").hide();
+                    }
+                });
+            }
+
+            function getGenus(obj) {
+                var id = obj.id;
+                var head = obj.text;
+                $.ajax({
+                    url: "/fern/ppgi/getGenus?id=" + id,
+                    type: "get",
+                    dataType: "json",
+                    success: function (data) {
+                        $(".subfamilyName").attr('id', id);
+                        $(".subfamilyName").text(head);
+                        $("#subfamilyHead").show();
+                        $("#genusNum").text(data.number);
+                        $('#genusTable').bootstrapTable('load', data.array);
+                        $("#genuses").show();
+                    }
+                });
+            }
+
+
+    </script>
+
+
+}

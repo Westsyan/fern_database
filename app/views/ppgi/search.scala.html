@@ -1,0 +1,129 @@
+@home.main("") {
+
+    <div class="row">
+        <div class="form-group col-sm-12">
+            <h2 class="page-heading"
+            style="text-align: left;
+                border-bottom: 5px solid #e9f3f4">Search</h2>
+        </div>
+    </div>
+
+
+    <form class="registration-form form-horizontal" id="form"
+    accept-charset="UTF-8" method="post">
+
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label col-sm-2">Order:</label>
+                <div class="col-sm-10">
+                    <select name="order" id="order" class="checkbox form-control" placeholder="none" ></select>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label col-sm-2">Family:</label>
+                <div class="col-sm-10">
+                    <select class="checkbox form-control" name="family" id="family">
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label col-sm-2">Genus:</label>
+                <div class="col-sm-10">
+                    <select class="checkbox form-control" name="genus" id="genus">
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <div class="actions col-sm-offset-1 col-sm-2">
+                <button type="button" class="btn btn-primary" style="width: 90%;" id="search" onclick="mySearch()">搜索</button>
+            </div>
+        </div>
+    </form>
+
+    <div style="display: none;" id="showTable">
+        <div id="toolbar"></div>
+
+        <table class="display table table-bordered" id="table" data-pagination="true" data-search="true"
+        data-toolbar="#toolbar" data-page-list="[10, 25, 50, 100, all]" data-search-align="left" data-multiple-search="true"
+        >
+            <thead>
+                <tr>
+                    <th data-field="id" data-sortable="true">编号</th>
+                    <th data-field="name" data-sortable="true">名称</th>
+                    <th data-field="order" data-sortable="true">目</th>
+                    <th data-field="family" data-sortable="true">科</th>
+                    <th data-field="genus" data-sortable="true">属</th>
+                    <th data-field="chinesename" data-sortable="true">中文名</th>
+                    <th data-field="author" data-sortable="true">拍摄人</th>
+                    <th data-field="place" data-sortable="true">拍摄地</th>
+                    <th data-field="photo" data-sortable="true">照片</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+
+    <script>
+
+            $(function () {
+
+                $.ajax({
+                    url: "@routes.PPGIController.getAllOrder()",
+                    type: "get",
+                    success: function (data) {
+                        $("#order").select2({data: data});
+                        $("#order").val("").select2();
+                    }
+                });
+
+                $.ajax({
+                    url: "@routes.PPGIController.getAllFamily()",
+                    type: "get",
+                    success: function (data) {
+                        $("#family").select2({data: data});
+                        $("#family").val("").select2();
+                    }
+                });
+
+                $.ajax({
+                    url: "@routes.PPGIController.getAllGenus()",
+                    type: "get",
+                    success: function (data) {
+                        $("#genus").select2({data: data});
+                        $("#genus").val("").select2();
+                    }
+                });
+
+            });
+
+            function mySearch() {
+                var index = layer.load(1);
+                $.ajax({
+                    url: "@routes.PPGIController.searchPhotoInfo()",
+                    type: "get",
+                    dataType: "json",
+                    data: $("#form").serialize(),
+                    success: function (data) {
+                        layer.close(index);
+                        $("#table").bootstrapTable({data:data});
+                        $("#table").bootstrapTable('load',data);
+                        $("#showTable").show();
+                    }
+                });
+            }
+
+
+    </script>
+
+}

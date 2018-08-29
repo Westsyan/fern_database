@@ -1,0 +1,173 @@
+@()(implicit session: Session)
+@admin.main(""){
+
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <h2 class="page-heading"
+      style="text-align: left;
+        border-bottom: 5px solid #e9f3f4">Update RNA</h2>
+    </div>
+  </div>
+
+  <div id="checkbox" class="checkbox"></div>
+
+  <div id="toolbar"></div>
+
+  <table class="display table table-bordered" id="table" data-pagination="true" data-search="true"
+  data-toolbar="#toolbar" data-page-list="[10, 25, 50, 100, all]" data-search-align="left" data-multiple-search="true"
+  >
+    <thead>
+      <tr>
+        <th data-field="operation" data-sortable="true">Operation</th>
+        <th data-field="sampleid" data-sortable="true">Sample ID</th>
+        <th data-field="species_name" data-sortable="true">Species Name</th>
+        <th data-field="chinese_name" data-sortable="true">中文名称</th>
+        <th data-field="order" data-sortable="true">Order</th>
+        <th data-field="sub_order" data-sortable="true">Sub-order</th>
+        <th data-field="family" data-sortable="true">Family</th>
+        <th data-field="sub_family" data-sortable="true">Sub-family</th>
+        <th data-field="genus" data-sortable="true">Genus</th>
+        <th data-field="tissue" data-sortable="true">Tissue</th>
+        <th data-field="sampling_location" data-sortable="true">Sampling Location</th>
+        <th data-field="instrument" data-sortable="true">Instrument</th>
+        <th data-field="layout" data-sortable="true">Layout</th>
+        <th data-field="raw_data" data-sortable="true">Raw data(G)</th>
+        <th data-field="q30" data-sortable="true">Q30%</th>
+        <th data-field="number_of_contigs" data-sortable="true">Number of contigs</th>
+        <th data-field="n50" data-sortable="true">N50(bp)</th>
+        <th data-field="busco_completed_rate" data-sortable="true">BUSCO-Completed rate</th>
+        <th data-field="biosample_id_in_ncbi" data-sortable="true">Biosample ID</th>
+      </tr>
+    </thead>
+  </table>
+
+
+  <div id="deleteShow" class="modal fade modal-margin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: 200px;">
+    <div class="modal-dialog" style="width: 400px;">
+      <div class="modal-content">
+        <div class="modal-header bg-primary">
+          <h4 class="modal-title" align="center" id="title1">
+            <span id="deleteTitle" style="font-weight: bold">删除样品
+              <b id="dtitle">
+
+              </b>
+            </span>
+          </h4>
+          <h4 class="modal-title" align="center" id="title2" style="display: none">
+            <span id="deleteTitle" style="font-weight: bold">删除中...</span>
+          </h4>
+          <h4 class="modal-title" align="center" id="title3" style="display: none">
+            <span id="deleteTitle" style="font-weight: bold">删除成功</span>
+          </h4>
+        </div>
+        <div class="row-fluid" align="center" >
+          <div id="warn1">
+            <img src="/assets/images/warning.png">
+          </div>
+          <div id="warn2" style="display: none;">
+            <img src="/assets/images/timg2.gif" style="height: 109px;">
+          </div>
+          <div id="warn3" style="display: none;">
+            <img src="/assets/images/success.png">
+          </div>
+        </div>
+        <div class="modal-footer bg-info">
+          <div align="center">
+            <button type="button" class="btn red" onclick="Delete(this)" style="width: 100px;" id="btn1">确定</button>
+            <button type="button" class="btn green" data-dismiss="modal" style="width: 100px;" id="btn2">取消</button>
+            <button type="button" class="btn green" onclick="updateDelete()" style="width: 100px;display: none;" id="btn3">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+
+          $(function () {
+
+              reloadTable();
+
+            var array = ["Sample ID", "Species Name", "中文名称", "Order", "Sub-order", "Family", "Sub-family", "Genus",
+              "Tissue", "Sampling Location", "Instrument", "Layout", "Raw data(G)", "Q30%", "Number of contigs", "N50(bp)",
+              "BUSCO-Completed rate", "Biosample ID"];
+            var values = ["sampleid", "species_name", "chinese_name", "order", "sub_order", "family", "sub_family","genus",
+              "tissue", "sampling_location", "instrument", "layout", "raw_data", "q30", "number_of_contigs", "n50", "busco_completed_rate",
+              "biosample_id_in_ncbi"];
+            var html = "";
+            $.each(array, function (n, value) {
+                      html += "<label style='margin-right: 15px'>" +
+                              "<input type='checkbox' checked='checked' value='" + values[n] + "' onclick=\"setColumns('" + values[n] + "')\">" + value +
+                              "</label>"
+                    }
+            );
+            $("#checkbox").append(html);
+
+            $('#table').bootstrapTable({});
+            var hiddenArray = ["order", "sub_order", "family", "sub_family","genus","tissue", "instrument", "layout",
+              "raw_data", "q30","n50", "busco_completed_rate"];
+            $.each(hiddenArray, function (n, value) {
+                      $('#table').bootstrapTable('hideColumn', value);
+                      $("input:checkbox[value=" + value + "]").attr("checked", false)
+                    }
+            );
+
+
+
+
+          });
+
+
+          function reloadTable() {
+            $.ajax({
+              url : "@routes.RnaController.getInfo()",
+              type: "get",
+              dataType : "json",
+              success : function (data) {
+                $("#table").bootstrapTable('load',data)
+              }
+            });
+          }
+
+
+          function setColumns(value) {
+            var element = $("input:checkbox[value=" + value + "]");
+            if (element.is(":checked")) {
+              $('#table').bootstrapTable('showColumn', value);
+            } else {
+              $('#table').bootstrapTable('hideColumn', value);
+            }
+          }
+
+
+
+          function Delete(obj) {
+            var id = obj.value;
+            deleting();
+            $.ajax({
+              url: "/fern/back/rna/deleteRNA?id=" + id,
+              type: "delete",
+              dataType: "json",
+              success: function (data) {
+                if (data.valid == "true") {
+                  deleteAfter();
+                }
+              }
+            });
+          }
+
+          function updateDelete() {
+            $("#deleteShow").modal("hide");
+            reloadTable();
+          }
+
+  </script>
+
+
+
+
+
+}

@@ -1,0 +1,147 @@
+@home.main("") {
+
+    <div class="row">
+        <div class="form-group col-sm-12">
+            <h2 class="page-heading"
+            style="text-align: left;
+                border-bottom: 5px solid #e9f3f4">Map</h2>
+        </div>
+    </div>
+
+
+    <div id="container" style="height: 650px;"></div>
+
+    <div style="display: none;" id="showTable">
+        <div id="toolbar"></div>
+
+        <table class="display table table-bordered" id="table" data-pagination="true" data-search="true"
+        data-toolbar="#toolbar" data-page-list="[10, 25, 50, 100, all]" data-search-align="left" data-multiple-search="true"
+        data-show-export="true" data-export-types="['excel','txt']" data-export-data-type="all"
+        >
+            <thead>
+                <tr>
+                    <th data-field="id" data-sortable="true">编号</th>
+                    <th data-field="family_ch">科名（中文）</th>
+                    <th data-field="family_en">科名（拉丁）</th>
+                    <th data-field="genus_ch">属名（中文）</th>
+                    <th data-field="genus_en">属名（拉丁）</th>
+                    <th data-field="scientific_name" data-sortable="true">学名</th>
+                    <th data-field="abbr">学名</th>
+                    <th data-field="chinesename" data-sortable="true">中文名</th>
+                    <th data-field="quote">引文</th>
+                    <th data-field="location" data-sortable="true">分布</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+
+    <script src="@routes.Assets.at("Highmaps-6.1.0/highmaps.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("Highmaps-6.1.0/exporting.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("Highmaps-6.1.0/data.js")" type="text/javascript"></script>
+    <script>
+
+            $(function () {
+
+
+                var map = null,
+                        unDrilldown = ['taiwan', 'xianggang', 'aomen'];
+                // 获取中国地图数据并初始化图表
+
+                $.getJSON('/fern/map/getMapData', function (mapdata) {
+                    var data = [];
+                    // 随机数据
+                    Highcharts.each(mapdata.features, function (md, index) {
+                        data.push({
+                            name: md.properties.name,
+                            drilldown: md.properties.filename, // 赋值 drilldown
+                          //  value: Math.floor((Math.random() * 100) + 1) // 生成 1 ~ 100 随机值
+                            value: md.properties.species
+                        });
+                    });
+                    map = new Highcharts.Map('container', {
+                        title: {
+                            text: '中国产蕨类植物的地理分布信息'
+                        },
+                        mapNavigation: {
+                            enabled: true,
+                            buttonOptions: {
+                                verticalAlign: 'bottom'
+                            }
+                        },
+                        tooltip: {
+                            useHTML: true,
+                            headerFormat: '<table><tr><td> {point.name}</td></tr>',
+                            pointFormat: '<tr><td>全称</td><td> {point.properties.fullname}</td></tr>' +
+                            '<tr><td>物种数</td><td> {point.properties.species}</td></tr>' +
+                            '<tr><td>经纬度</td><td> {point.properties.longitude},{point.properties.latitude}</td></tr>',
+                            footerFormat: '</table>'
+                        },
+                        colorAxis: {
+                            min: 0,
+                            minColor: '#fff',
+                            maxColor: '#006cee',
+                            labels: {
+                                style: {
+                                    "color": "red", "fontWeight": "bold"
+                                }
+                            }
+                        },
+                        series: [{
+                            data: data,
+                            mapData: mapdata,
+                            joinBy: 'name',
+                            name: '中国地图',
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            states: {
+                                hover: {
+                                    color: '#a4edba'
+                                },
+                                select: {
+                                    color: 'orange',
+                                    borderColor: 'black',
+                                    dashStyle: 'shortdot'
+                                }
+                            },
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.name}'
+                            },
+                            point: {
+                                events: {
+                                    click: function () {
+                                        var index = layer.load(1);
+                                        var value =  "id";
+                                        $.ajax({
+                                            url: "/fern/map/getInfoByLocation?location=" + this.name,
+                                            type: "get",
+                                            dataType: "json",
+                                            success: function (data) {
+
+
+                                                $("#table").bootstrapTable({data: data});
+                                                $("#table").bootstrapTable('load', data);
+                                                var values = ["family_ch", "family_en", "genus_ch", "genus_en", "abbr", "quote"];
+                                                $.each(values,function (n,value) {
+                                                   $("#table").bootstrapTable("hideColumn",value);
+                                                });
+                                                $("#showTable").show();
+                                                layer.close(index);
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }]
+                    });
+
+                });
+            })
+
+
+
+    </script>
+
+
+}

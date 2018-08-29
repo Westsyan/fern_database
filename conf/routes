@@ -1,0 +1,129 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET           /                                            controllers.IndexController.home
+
+
+GET           /fern/news/toIndex                           controllers.IndexController.news
+
+
+
+GET           /fern/admin/toAdmin                          controllers.IndexController.toAdmin
+GET           /fern/admin/logout                           controllers.PasswordController.logout
+GET           /fern/admin/loginBefore                      controllers.IndexController.loginBefore()
+GET           /fern/admin/login                            controllers.PasswordController.login
+GET           /fern/back/admin/home                        controllers.IndexController.adminHome
+GET           /fern/back/admin/updateBefore                controllers.PasswordController.updateBefore
+POST          /fern/back/admin/updatePassword              controllers.PasswordController.updatePassword
+GET           /fern/back/admin/getPassword                 controllers.PasswordController.getPassword(password:String)
+GET           /fern/back/news/addNewsBefore                controllers.NewsController.addNewsBefore
+POST          /fern/back/news/addNews                      controllers.NewsController.addNews
+PUT           /fern/back/news/updateTitle                  controllers.NewsController.updateTitle
+DELETE        /fern/back/news/deleteNews                   controllers.NewsController.deleteById(id:Int)
+GET           /fern/back/news/getById                      controllers.NewsController.getById(id:String)
+PUT           /fern/back/news/resetNews                    controllers.NewsController.resetNews
+
+GET           /fern/back/news/getAllNews                   controllers.NewsController.getAllNews
+GET           /fern/ppgi/getAllNews                        controllers.NewsController.getAllNewsTitle
+GET           /fern/ppgi/openNews                          controllers.NewsController.openNews(id:Int)
+GET           /fern/news/newsInfo                          controllers.NewsController.newsInfo(id:Int)
+
+
+
+GET           /fern/ppgi/insertFern                        controllers.PPGIController.insertPPGI
+GET           /fern/ppgi/toPPGI                            controllers.PPGIController.toPPGI
+GET           /fern/ppgi/getAllClasses                     controllers.PPGIController.getAllClasses
+GET           /fern/ppgi/getOrderes                        controllers.PPGIController.getOrders(id:String)
+GET           /fern/ppgi/getFamilies                       controllers.PPGIController.getFamilies(id:String)
+GET           /fern/ppgi/getSubFamilies                    controllers.PPGIController.getSubFamilies(id:String)
+GET           /fern/ppgi/getGenus                          controllers.PPGIController.getGenus(id:String)
+
+GET           /fern/ppgi/toSearch                          controllers.PPGIController.toSearch
+GET           /fern/ppgi/getAllOrder                       controllers.PPGIController.getAllOrder
+GET           /fern/ppgi/getAllFamily                      controllers.PPGIController.getAllFamily
+GET           /fern/ppgi/getAllGenus                       controllers.PPGIController.getAllGenus
+GET           /fern/ppgi/searchPhotoInfo                   controllers.PPGIController.searchPhotoInfo
+GET           /fern/ppgi/openImg                           controllers.PPGIController.openImg(id:String)
+GET           /fern/ppgi/toInfo                            controllers.PPGIController.toInfo(id:String)
+
+GET           /fern/rna/toRNA                              controllers.RnaController.toRNA
+GET           /fern/rna/download                           controllers.RnaController.download(id:String,code:String)
+GET           /fern/rna/getAllInfo                         controllers.RnaController.getAllInfo
+GET           /fern/rna/moreInfo                           controllers.RnaController.toMoreInfo(id:String)
+GET           /fern/rna/moreInfoByName                     controllers.RnaController.toMoreInfoByName(name:String)
+GET           /fern/rna/checkName                          controllers.RnaController.checkName(name:String)
+GET           /fern/rna/toBlastn                           controllers.RnaController.toBlastn
+GET           /fern/rna/getDatabase                        controllers.RnaController.getDatabase
+POST          /fern/rna/geneBlastnRun                      controllers.RnaController.geneBlastnRun
+GET           /fern/rna/toProcess                          controllers.RnaController.toProcess
+
+GET           /fern/back/rna/toUploadRNA                   controllers.RnaController.toUploadRNA
+POST          /fern/back/rna/uploadRNA                     controllers.RnaController.uploadRNA
+PUT           /fern/back/rna/updateRNA                     controllers.RnaController.updateRNA(id:Int)
+POST          /fern/back/rna/checkSampleId                 controllers.RnaController.checkSample
+POST          /fern/back/rna/checkInfoSampleId             controllers.RnaController.checkInfoSample(id:Int)
+GET           /fern/back/rna/toUpdateRNA                   controllers.RnaController.toUpdateRNA
+GET           /fern/back/rna/toUpdateInfo                  controllers.RnaController.toUpdateInfo(id:String)
+GET           /fern/back/rna/getInfo                       controllers.RnaController.getInfo
+DELETE        /fern/back/rna/deleteRNA                     controllers.RnaController.deleteById(id:String)
+
+GET           /fern/tree/toTree                            controllers.TreeController.toTree
+GET           /fern/tree/plot                              controllers.TreeController.plot
+POST          /fern/tree/downloadTree                      controllers.TreeController.downloadTree
+GET           /fern/back/tree/toUploadTree                 controllers.TreeController.toUploadTree
+POST          /fern/back/tree/uploadTree                   controllers.TreeController.addNewick
+GET           /fern/tree/readSize                          controllers.TreeController.readSize
+GET           /fern/tree/toBlastx                          controllers.TreeController.toBlastx
+POST          /fern/tree/blastxRun                         controllers.TreeController.blastxRun
+
+GET           /fern/map/insertMap                          controllers.MapController.insert
+GET           /fern/map/insertLocation                     controllers.MapController.insertLocation
+GET           /fern/map/getByLocation                      controllers.MapController.getByLocation
+GET           /fern/map/toMaps                             controllers.MapController.toMaps
+GET           /fern/map/getInfoByLocation                  controllers.MapController.getInfoByLocation(location:String)
+GET           /fern/map/toInfoById                         controllers.MapController.toInfoById(id:Int)
+GET           /fern/map/toSearch                           controllers.MapController.toSearch
+GET           /fern/map/getAllFamilyCh                     controllers.MapController.getAllFamilyCh
+GET           /fern/map/getAllFamilyEn                     controllers.MapController.getAllFamilyEn
+GET           /fern/map/getAllGenusCh                      controllers.MapController.getAllGenusCh
+GET           /fern/map/getAllGenusEn                      controllers.MapController.getAllGenusEn
+GET           /fern/map/getAllChinese                      controllers.MapController.getAllChinese
+GET           /fern/map/getAllAbbr                         controllers.MapController.getAllAbbr
+GET           /fern/map/getMapData                         controllers.MapController.getMapData
+GET           /fern/map/getByPosition                      controllers.MapController.getByPosition
+GET           /fern/map/getLocation                        controllers.MapController.getLocation(id:Int)
+
+
+GET           /fern/chloroplast/toBlastn                   controllers.ChloroplastController.toBlastn
+GET           /fern/chloroplast/toORDraw                   controllers.ChloroplastController.toORDraw
+GET           /fern/chloroplast/getSample                  controllers.ChloroplastController.getSample
+POST          /fern/chloroplast/geneBlastnRun              controllers.ChloroplastController.geneBlastnRun
+GET           /fern/chloroplast/getImage                   controllers.ChloroplastController.getImage
+GET           /fern/chloroplast/downloadJpg                controllers.ChloroplastController.downloadJpg(id:String)
+
+GET           /fern/back/chloroplast/toUploadSample        controllers.ChloroplastController.toUploadSample
+POST          /fern/back/chloroplast/uploadSample          controllers.ChloroplastController.uploadSample
+GET           /fern/back/chloroplast/getAllSample          controllers.ChloroplastController.getAllSample
+POST          /fern/back/chloroplast/checkSample           controllers.ChloroplastController.checkSample
+DELETE        /fern/back/chloroplast/deleteById            controllers.ChloroplastController.deleteById(id:Int)
+
+POST          /fern/ppgi/getJson                           controllers.PPGIController.getJson
+GET           /fern/ppgi/toTree                            controllers.PPGIController.toTree
+
+GET           /fern/download/downloadBlast                 controllers.RnaController.downloadBlast(blast:String)
+
+GET           /fern/message/toBoard                        controllers.MessageController.toAboard
+POST          /fern/message/insertMessage                  controllers.MessageController.insertMessage
+GET           /fern/message/toMessageAdmin                 controllers.MessageController.toMessageAdmin
+GET           /fern/message/getMessage                     controllers.MessageController.getMessage
+
+DELETE        /fern/message/deleteMessage                  controllers.MessageController.deleteMessage(id:Int)
+
+
+
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET           /assets/*file                                controllers.Assets.at(path="/public", file)

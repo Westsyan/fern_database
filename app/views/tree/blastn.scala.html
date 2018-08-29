@@ -1,0 +1,253 @@
+@home.main("Blastx Against Homologous Sequence") {
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <h2 class="page-heading"
+      style="text-align: left;
+        border-bottom: 5px solid #e9f3f4;
+        letter-spacing: 0px"><font style="font-size: 30px">Blastx Against Homologous Sequence</font></h2>
+    </div>
+  </div>
+
+  <form class="registration-form form-horizontal" id="conditionForm"
+  style="margin: 20px;">
+
+    <div class="form-group">
+      <label class="control-label col-sm-2">Type of query:</label>
+      <div class="col-sm-3">
+        <select class="form-control" onchange="change(this)" name="method">
+          <option selected value="text">Text</option>
+          <option value="file">File</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" id="queryContent">
+      <label class="control-label col-sm-2">Query text:</label>
+      <div class="col-sm-8">
+        <textarea class="form-control" name="query" id="query" rows="5"
+        style="font-family: 'Courier New',Menlo,Monaco,Consolas,monospace;font-size: 16px"></textarea>
+        <span class="help-block">e.g.,&nbsp;<a href="#"><em id="egQuery">
+          example</em></a></span>
+      </div>
+    </div>
+
+    <div id="queryFile" style="display: none;">
+      <div class="form-group">
+        <label class="control-label col-sm-2">Query fasta file:</label>
+        <div class="col-sm-8">
+          <input id="input-1" type="file" class="file control-label" name="file" data-show-preview="false"
+          data-show-upload="false">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2">Evalue:</label>
+      <div class="col-sm-2">
+        <input class="form-control" name="evalue" id="evalue" value="1e-5">
+      </div>
+
+      <label class="control-label col-sm-2">Word size:</label>
+      <div class="col-sm-2">
+        <input class="form-control" name="wordSize" id="mCharacteristic" value="6">
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2">Max target seqs:</label>
+      <div class="col-sm-2">
+        <input class="form-control" name="maxTargetSeqs" id="mCharacteristic" value="10">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="actions col-sm-offset-2 col-sm-3">
+        <button type="button" class="btn btn-primary" style="width: 80%;
+          margin-top: 5px" id="search" onclick="mySearch()">
+          Execute</button>
+      </div>
+      <div class="actions  col-sm-3" style="text-align: right">
+        <button type="button" class="btn btn-primary" id="reset" style="width: 80%;
+          margin-top: 5px">
+          Reset</button>
+        <button type="reset" style="display: none" id="r"></button>
+      </div>
+    </div>
+
+  </form>
+  <div id="result" style="display: none">
+    <hr>
+    <h4 style="color: black">Results:</h4>
+    <button class="btn btn-primary down" onclick="downloadHtml()">Download</button>
+    <div id="resultContent"></div>
+
+  </div>
+
+  <script>
+          $(function () {
+
+            formValidation()
+          });
+
+          function change(element) {
+            var value = $(element).find(">option:selected").val()
+            if (value == "text") {
+              $("#queryContent").show()
+              $("#queryFile").hide()
+            } else {
+              $("#queryContent").hide()
+              $("#queryFile").show()
+            }
+          }
+
+          $('#egQuery').click(function () {
+            var eg = ">RS_77_Marsilea_quadrifolia__c20413_g1_i1\n" +
+                    "KLIIDTDPGIDDAMAILMAFHSPEVEIIGLTTIFGNVPTSLATNNALHLLELIGREDVPV\n" +
+                    "AEGSAMSLKPKLRIADFVHGSDGLGNTNPAPPKRKAVDLSAKDFLIKMVNDYPGEVIVVA\n" +
+                    "LGPLTNVAQAIESDPTFAKNVKRIVVLGGAFFVNGNVNPATEANLGDPEAADIVFTSGAD\n" +
+                    "VLVVGINITHQVVMTDKDWEQLGQSDSLFAKYIHKIAKFYFGYHHEAYGIPTALAAALDP\n" +
+                    "SLFTYAVGRVQLDGISKGMTIFSNLEKRWSPWCNKPSVKVAITVDADRVTKLLMD\n" +
+                    ">RS_112_Azolla_pinnata__c26843_g1_i1\n" +
+                    "KLIIDTDPGIDDAMAILMAFHSPEVEIIGFTTIFGNVPTNLATNNALHLLEEIGREDVPV\n" +
+                    "AQGASMSLTPKLRIADFVHGNDGLGNTYPPTPKGKPVDLDAKDFLIKMARENINEVTIVA\n" +
+                    "LGPLTNIALAIENDPMFAKNVKQIVVLGGAFFVNGNVNPAAEANLGDPEAADIVFTSGAD\n" +
+                    "LLVVGINITHQVIMTDKDCEQLGQSDSAFAKYVHKIADFYFAYHHEAYGIPTALVAALDP\n" +
+                    "SLFTYSEGRVQLDGICKGMTILNSSKKRWTDWCNKPTVKVAVTVDEEKVRKMLMD";
+            $('#query').val(eg);
+            $("#conditionForm").formValidation("revalidateField", "query")
+          });
+
+          function mySearch() {
+            var form = $("#conditionForm");
+            var fv = form.data("formValidation");
+            fv.validate();
+            if (fv.isValid()) {
+              var form1 = new FormData($("#conditionForm")[0]);
+              var index = layer.load(1, {
+                shade: [0.1, '#fff']
+              });
+              $("#search").attr("disabled", true).html("Search...");
+              $.ajax({
+                url: "@routes.TreeController.blastxRun()",
+                type: "post",
+                processData: false,
+                contentType: false,
+                data: form1,
+                success: function (data) {
+                  $("#search").attr("disabled", false).html("Search").blur();
+                  if (data.valid == "false") {
+                    swal("Error", data.message, "error");
+                    $("#result").hide()
+                  } else {
+                    $("#resultContent").html(data.html)
+                    $("#result").show()
+                  }
+                  layer.close(index)
+                }
+              });
+            }
+          }
+
+          function downloadHtml() {
+            var fileName = "blastx.html";
+            var content = $("#resultContent").html();
+            var blob = new Blob([content], {
+              type: "text/plain;charset=utf-8"
+            });
+            saveAs(blob, fileName)
+          }
+
+          function formValidation() {
+            var infinityNumber = Number.MAX_VALUE
+            $('#conditionForm').formValidation({
+              framework: 'bootstrap',
+              icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+              },
+              fields: {
+                query: {
+                  validators: {
+                    notEmpty: {
+                      message: 'Query text is required！'
+                    }
+                  }
+                },
+                file: {
+                  validators: {
+                    notEmpty: {
+                      message: 'Query file is required！'
+                    },
+                    file: {
+                      extension: 'txt',
+                      message: 'Query file must is a txt file！'
+                    }
+                  }
+                },
+                evalue: {
+                  validators: {
+                    notEmpty: {
+                      message: 'Evalue is required！'
+                    },
+                    numeric: {
+                      message: 'Evalue must be number！'
+                    },
+                    between: {
+                      min: "0",
+                      max: infinityNumber,
+                      message: "Evalue must greater than or equal to 0！"
+                    }
+                  }
+                },
+                wordSize: {
+                  validators: {
+                    notEmpty: {
+                      message: 'Word size is required！'
+                    },
+                    integer: {
+                      message: 'Word size must be intger！'
+                    },
+                    between: {
+                      min: "1",
+                      max: "8",
+                      message: "Word size must between 1 and 8！"
+                    }
+                  }
+                },
+                maxTargetSeqs: {
+                  validators: {
+                    notEmpty: {
+                      message: 'Max target seqs is required！'
+                    },
+                    integer: {
+                      message: 'Max target seqs must be integer！'
+                    },
+                    between: {
+                      min: "0",
+                      max: infinityNumber,
+                      message: "Max target seqs must greater than or equal to 0！"
+                    }
+                  }
+                },
+              }
+            });
+          }
+
+          $("#input-1").fileinput({
+            showPreview: false,
+          });
+
+          $('#reset').click(function () {
+            $('#r').click();
+            $("#conditionForm").formValidation("revalidateField", "query");
+            $("#conditionForm").formValidation("revalidateField", "evalue");
+            $("#conditionForm").formValidation("revalidateField", "wordSize");
+            $("#conditionForm").formValidation("revalidateField", "maxTargetSeqs");
+
+          });
+  </script>
+
+
+}
